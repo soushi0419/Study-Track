@@ -28,18 +28,26 @@
                 </div>
 
                 <label for="subject">教科</label>
-                <div>
+                <div class="subject-select">
                     <select id="subject">
                         <option value="">教科を選択してください</option>
                     </select>
                 </div>
 
                 <label for="study-time">学習時間</label>
-                <div>
+                <div class="time-input">
                     <input type="number" id="hours" placeholder="0" min="0" max="23" required>
                     <span>時間</span>
                     <input type="number" id="minutes" placeholder="0" min="0" max="59" required>
                     <span>分</span>
+                </div>
+
+                <label for="study-type">学習タイプ</label>
+                <div class="type-select">
+                    <input type="radio" id="type1" name="study-type" value="school" checked>
+                    <label for="type1">学校学習</label>
+                    <input type="radio" id="type2" name="study-type" value="self-study">
+                    <label for="type2">自主学習</label>
                 </div>
             </form>
         </div>
