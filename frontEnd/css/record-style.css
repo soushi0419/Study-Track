@@ -24,3 +24,11 @@ body {
 .back-button:hover {
     color: #007BFF;
 }
+
+.container {
+    display: flex;
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 0 50px;
+    gap: 70px;
+}
