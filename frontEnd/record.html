@@ -1,15 +1,36 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
     <title>記録画面</title>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="css/record-style.css">
 </head>
+
 <body>
     <div class="header">
         <a href="index.html" class="back-button">←</a>
         <h1>学習記録</h1>
     </div>
-    
+
+    <div class="container">
+        <div class="record">
+            <h2>学習記録を付ける</h2>
+            <form id="recordform">
+                <label for="date">日付</label>
+                <div class="date-input">
+                    <input type="number" id="year" name="year" placeholder="年" min="2000" max="2100" required>
+                    <span>年</span>
+                    <input type="number" id="month" name="month" placeholder="月" min="1" max="12" required>
+                    <span>月</span>
+                    <input type="number" id="day" name="day" placeholder="日" min="1" max="31" required>
+                    <span>日</span>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
 </body>
+
 </html>
