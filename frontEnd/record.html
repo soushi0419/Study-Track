@@ -59,6 +59,23 @@
             </form>
         </div>
 
+        <div class="target">
+            <h2>今月の目標時間</h2>
+            <form id="target-form">
+                <label for="target-time"></label>
+                <div class="time-input">
+                    <input type="number" id="target-hours" placeholder="0" min="0" required>
+                    <span>時間</span>
+                    <input type="number" id="target-minutes" placeholder="0" min="0" max="59" required>
+                    <span>分</span>
+                </div>
+
+                <div class="target-progress">
+                    <p>目標：<span id="target-time-display">0</span>時間</p>
+                </div>
+            </form>
+        </div>
+
         
     </div>
 
