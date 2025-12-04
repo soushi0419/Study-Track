@@ -54,7 +54,41 @@
                 <div id="calendar" class="calendar-days"></div>
             </div>
         </div>
-        
+
+        <div class="top-right">
+            <h2>今月の目標</h2>
+            <div class="target">
+                <div class="progress-circle-container">
+                    <svg class="progress-circle-">
+                        <circle cx="60" cy="60" r="54" class="progress-bg"></circle>
+                        <circle cx="60" cy="60" r="54" class="progress-fill" id="progressFill"></circle>
+                    </svg>
+                    <div class="progress-text">
+                        <span id="achievementPercent">0</span>%
+                    </div>
+                </div>
+
+                <div class="goal-info">
+                    <div class="info-item">
+                        <span class="info-label">残り日数</span>
+                        <span class="info-value" id="remainingDays">-</span>日
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">1日当たり目標</span>
+                        <span class="info-value" id="dailyGoal">-</span>時間
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">目標時間</span>
+                        <span class="info-value" id="monthlyGoal">-</span>時間
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">現在の勉強時間</span>
+                        <span class="info-value" id="currentStudyTime">-</span>時間
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 </body>
 
