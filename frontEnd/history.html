@@ -15,6 +15,26 @@
         <h1>学習履歴</h1>
     </div>
 
+    <div class="container">
+        <div class="top-left">
+            <h2>勉強時間グラフ</h2>
+            <div class="study-time-graph">
+                <div>
+                    <input type="radio" name="graph-type" value="week" checked data-type="week">
+                    <span>週</span>
+                    <input type="radio" name="graph-type" value="month" data-type="month">
+                    <span>月</span>
+                    <input type="radio" name="graph-type" value="day" data-type="day">
+                    <span>曜日</span>
+                </div>
+            </div>
+
+            <div class="chart">
+                <canvas id="studyChart"></canvas>
+            </div>
+        </div>
+        
+    </div>
 </body>
 
 </html>
