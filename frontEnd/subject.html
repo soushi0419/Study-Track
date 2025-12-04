@@ -1,17 +1,37 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
     <title>教科管理画面</title>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="css/subject-style.css">
 </head>
+
 <body>
     <div class="header">
         <a href="index.html" class="back-button">←</a>
         <h1>教科管理</h1>
     </div>
 
-    
+    <div class="container">
+        <div class="subject-form">
+            <h2>教科を登録する</h2>
+            <form id="subject-form">
+                <label for="subject-name">教科名</label>
+                <div class="subject">
+                    <input type="text" id="subject-name" placeholder="例：国語、数学、社会、英語" required>
+                </div>
+
+                <label for="comment">コメント</label>
+                <div class="comment-input">
+                    <textarea id="comment" rows="4" placeholder="コメントを入力してください"></textarea>
+                </div>
+
+                <button type="submit" class="submit-button">記録を保存</button>
+            </form>
+        </div>
+    </div>
 
 </body>
+
 </html>
