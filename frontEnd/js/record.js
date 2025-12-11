@@ -1,7 +1,7 @@
-//ページ読み込み時に教科一覧取得
 document.addEventListener('DOMContentLoaded', () => {
-  loadSubjects();
-  setTodayDate();
+  loadSubjects();//教科一覧読み込み
+  setTodayDate();//本日の日付読み込み
+  loadMonthlyGoal();//目標時間読み込み
 });
 
 //本日の日付を初期値として設定する
