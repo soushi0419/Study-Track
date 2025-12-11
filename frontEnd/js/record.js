@@ -116,3 +116,45 @@ async function loadMonthlyGoal() {
     console.error('エラー:', error);
   }
 }
+
+//目標時間フォーム送信時の処理
+document.getElementById('target-from').addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = today.getMonth() + 1;
+  const target_hours = parseInt(document.getElementById('target-hours').value);
+
+  if (target_hours <= 0) {
+    alert('0より大きい値を入力してください');
+    return;
+  }
+
+  try {
+    const response = await fetch('/api/monthly-goals', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: Json.stringify({
+        year: year,
+        month: month,
+        target_hour: target_hours
+      })
+    });
+
+    const data = await response.json();
+
+    if (data.success) {
+      alert('目標を設定しました');
+      document.getElementById('target-time-display').textContent = target_hours;
+      loadMonthlyGoal();
+    } else {
+      alert('保存に失敗しました')
+    }
+  } catch (error) {
+    console.error('エラー:', error);
+    alert('通信エラーが発生しました')
+  }
+});
