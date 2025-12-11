@@ -1,6 +1,3 @@
-const { json } = require("body-parser");
-const { availableParallelism } = require("os");
-
 //ページ読み込み時に教科一覧を表示
 document.addEventListener('DOMContentLoaded', () => {
     loadSubjects();
@@ -14,7 +11,7 @@ document.getElementById('subject-form').addEventListener('submit', async (e) => 
     const comment = document.getElementById('comment').value;
 
     try {
-        const response = await fetch('/api/subject', {
+        const response = await fetch('/api/subjects', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -47,7 +44,7 @@ async function loadSubjects() {
         const data = await response.json();
 
         if (data.success) {
-            displaySubjects(data.Subjects);
+            displaySubjects(data.subjects);
         }
     } catch (error) {
         console.error('エラー:', error);
