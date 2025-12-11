@@ -74,6 +74,42 @@ app.delete('/api/subjects/:id', async (req, res) => {
     }
 });
 
+//月別目標時間を保存するエンドポイント
+app.post('/api/monthly-goals', async (req, res) => {
+    try {
+        const { year, month, target_hours } = req.body;
+
+        const query = 'INSERT INTO monthly_goals (year, month, target_hours) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE target_hours = ?, updated_at = CURRENT_TIMESTAMP';
+
+        await pool.query(query, [year, month, target_hours, target_hours]);
+
+        res.json({ success: true, message: '目標を登録しました' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: 'エラーが発生しました' });
+    }
+});
+
+//月別目標時間を取得するエンドポイント
+app.get('/api/monthly-goals/:year/:month', async (req, res) => {
+    try {
+        const { year, month } = req.params;
+
+        const query = 'SELECT target_hours FROM monthly_goals WHERE year = ? AND month = ?';
+
+        const [rows] = await pool.query(query, [year, month]);
+
+        if (rows.length > 0) {
+            res.json({ success: true, target_hours: rows[0].target_hours });
+        } else {
+            res.json({ success: true, target_hours: 0 });
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: 'エラーが発生しました' });
+    }
+});
+
 // サーバーをポート3000で起動
 app.listen(3000, () => {
     console.log('サーバーが http://localhost:3000 で起動しました');
