@@ -1,3 +1,8 @@
+//ページ読み込み時に教科一覧取得
+document.addEventListener('DOMContentLoaded',() => {
+  loadSubjects();
+});
+
 // フォーム送信時の処理
 document.getElementById('record-form').addEventListener('submit', async (e) => {
   e.preventDefault(); // ページのリロードを防ぐ
