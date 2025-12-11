@@ -118,7 +118,7 @@ async function loadMonthlyGoal() {
 }
 
 //目標時間フォーム送信時の処理
-document.getElementById('target-from').addEventListener('submit', async (e) => {
+document.getElementById('target-form').addEventListener('submit', async (e) => {
   e.preventDefault();
 
   const today = new Date();
@@ -137,10 +137,10 @@ document.getElementById('target-from').addEventListener('submit', async (e) => {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: Json.stringify({
+      body: JSON.stringify({
         year: year,
         month: month,
-        target_hour: target_hours
+        target_hours: target_hours
       })
     });
 
@@ -151,10 +151,10 @@ document.getElementById('target-from').addEventListener('submit', async (e) => {
       document.getElementById('target-time-display').textContent = target_hours;
       loadMonthlyGoal();
     } else {
-      alert('保存に失敗しました')
+      alert('保存に失敗しました');
     }
   } catch (error) {
     console.error('エラー:', error);
-    alert('通信エラーが発生しました')
+    alert('通信エラーが発生しました');
   }
 });
