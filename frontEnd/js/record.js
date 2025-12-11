@@ -46,6 +46,12 @@ document.getElementById('record-form').addEventListener('submit', async (e) => {
   const study_type = document.querySelector('input[name="study-type"]:checked').value;
   const comment = document.getElementById('comment').value;
 
+  // 教科が選択されているか確認
+  if (!subject) {
+    alert('教科を選択してください');
+    return;
+  }
+
   // 日付をYYYY-MM-DD形式に変換
   const date = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
 
