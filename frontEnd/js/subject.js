@@ -38,3 +38,17 @@ document.getElementById('subject-form').addEventListener('submit', async (e) => 
         alert('通信エラーが発生しました。');
     }
 });
+
+//教科一覧を読み込む関数
+async function loadSubjects() {
+    try {
+        const response = await fetch('/api/subjects');
+        const data = await response.json();
+
+        if (data.success) {
+            displaySubjects(data.Subjects);
+        }
+    } catch (error) {
+        console.error('エラー:', error);
+    }
+}
