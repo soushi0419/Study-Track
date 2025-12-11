@@ -1,7 +1,20 @@
 //ページ読み込み時に教科一覧取得
 document.addEventListener('DOMContentLoaded', () => {
   loadSubjects();
+  setTodayDate();
 });
+
+//本日の日付を初期値として設定する関数
+function setTodayDate() {
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = String(today.getMonth() + 1).padStart(2, '0');
+  const day = String(today.getDate()).padStart(2, '0');
+
+  document.getElementById('year').value = year;
+  document.getElementById('month').value = parseInt(month);
+  document.getElementById('day').value = parseInt(day);
+}
 
 //教科一覧を読み込む関数
 async function loadSubjects() {
