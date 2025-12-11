@@ -1,7 +1,21 @@
 //ページ読み込み時に教科一覧取得
-document.addEventListener('DOMContentLoaded',() => {
+document.addEventListener('DOMContentLoaded', () => {
   loadSubjects();
 });
+
+//教科一覧を読み込む関数
+async function loadSubjects() {
+  try {
+    const response = await fetch('/api/subjects');//サーバーから教科取得
+    const data = await response.json();
+
+    if (data.success) {
+      displaySubjects(data.subjects);//取得した教科をドロップダウンに表示
+    }
+  } catch (error) {
+    console.error('エラー:', error);
+  }
+}
 
 // フォーム送信時の処理
 document.getElementById('record-form').addEventListener('submit', async (e) => {
