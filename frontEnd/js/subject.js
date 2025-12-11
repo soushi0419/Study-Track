@@ -54,10 +54,11 @@ async function loadSubjects() {
 //教科一覧を表示する関数
 function displaySubjects(subjects) {
     const listDiv = document.querySelector('.list');
+    const deleteButton = document.getElementById('delete-button');
 
     if (subjects.length === 0) {
         listDiv.innerHTML = '<p class="message">まだ強化が登録されていません</p>';
-        document.querySelector('.submit-button').classList.remove('show');
+        deleteButton.classList.remove('show');
         return;
     }
 
@@ -75,10 +76,10 @@ function displaySubjects(subjects) {
     });
 
     listDiv.innerHTML = html;
-    document.querySelector('.submit-button').classList.add('show');
+    deleteButton.classList.add('show');
 
     //削除ボタンのイベント設定
-    document.querySelector('.submit-button').addEventListener('click', deleteSelectedSubjects);
+    deleteButton.addEventListener('click', deleteSelectedSubjects);
 }
 
 //選択された教科を削除する関数

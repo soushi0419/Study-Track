@@ -230,6 +230,25 @@ body {
     background-color: #c82333;
 }
 
+.subject-list .delete-button {
+    background-color: #dc3545;
+    padding: 10px 24px;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    display: none;
+    margin-top: 10px;
+}
+
+.subject-list .delete-button.show {
+    display: block;
+}
+
+.subject-list .delete-button:hover {
+    background-color: #c82333;
+}
+
 /* レスポンシブ */
 @media (max-width: 900px) {
     .container {
