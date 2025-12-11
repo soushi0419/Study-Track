@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
   setTodayDate();
 });
 
-//本日の日付を初期値として設定する関数
+//本日の日付を初期値として設定する
 function setTodayDate() {
   const today = new Date();
   const year = today.getFullYear();
@@ -16,7 +16,7 @@ function setTodayDate() {
   document.getElementById('day').value = parseInt(day);
 }
 
-//教科一覧を読み込む関数
+//教科一覧を読み込む
 async function loadSubjects() {
   try {
     const response = await fetch('/api/subjects');//サーバーから教科取得
@@ -30,7 +30,7 @@ async function loadSubjects() {
   }
 }
 
-//教科一覧をドロップダウンに表示する関数
+//教科一覧をドロップダウンに表示する
 function displaySubjects(subjects) {
   const subjectSelect = document.getElementById('subject');//ドロップダウンを取得
 
@@ -98,3 +98,21 @@ document.getElementById('record-form').addEventListener('submit', async (e) => {
     alert('通信エラーが発生しました');
   }
 });
+//ページ読み込み時に現在の目標時間を取得し表示する
+async function loadMonthlyGoal() {
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = today.getMonth() + 1;
+
+  try {
+    const response = await fetch(`/api/monthly-goals/${year}/${month}`);
+    const data = await response.json();
+
+    if (data.success) {
+      document.getElementById('target-time-display').textContent = data.target_hours;
+      document.getElementById('target-hours').value = data.target_hours;
+    }
+  } catch (error) {
+    console.error('エラー:', error);
+  }
+}
