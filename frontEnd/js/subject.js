@@ -1,4 +1,5 @@
 const { json } = require("body-parser");
+const { availableParallelism } = require("os");
 
 //ページ読み込み時に教科一覧を表示
 document.addEventListener('DOMContentLoaded', () => {
@@ -57,7 +58,7 @@ async function loadSubjects() {
 function displaySubjects(subjects) {
     const listDiv = document.querySelector('.list');
 
-    if(subjects.length === 0) {
+    if (subjects.length === 0) {
         listDiv.innerHTML = '<p class="message">まだ強化が登録されていません</p>';
         document.querySelector('.submit-button').classList.remove('show');
         return;
@@ -70,7 +71,7 @@ function displaySubjects(subjects) {
          <input type="checkbox" class="subject-checkbox" data-id="${subject.id}">
          <div class="subject-item-content">
           <div class="subject-item-name">${subject.name}</div>
-          ${subject.comment ? `<div class="subject-item-comment">${subject.comment}</div>`:''}
+          ${subject.comment ? `<div class="subject-item-comment">${subject.comment}</div>` : ''}
          </div>
         </div>
         `;
@@ -81,4 +82,34 @@ function displaySubjects(subjects) {
 
     //削除ボタンのイベント設定
     document.querySelector('.submit-button').addEventListener('click', deleteSelectedSubjects);
+}
+
+//選択された教科を削除する関数
+async function deleteSelectedSubjects() {
+    const checkboxes = document.querySelectorAll('.subject-checkbox:checked');
+
+    if (checkboxes.length === 0) {
+        alert('削除する教科を選択してください');
+        return;
+    }
+
+    if (!confirm('選択した教科を削除してもいいですか')) {
+        return;
+    }
+
+    try {
+        for (const checkbox of checkboxes) {
+            const id = checkbox.getAttribute('data-id');
+
+            await fetch(`/api/subjects/${id}`, {
+                method: 'DELETE'
+            });
+        }
+
+        alert('教科を削除しました');
+        loadSubjects();;//一覧更新
+    } catch (error) {
+        console.error('エラー:', error);
+        alert('削除エラーが発生しました');
+    }
 }
