@@ -78,4 +78,7 @@ function displaySubjects(subjects) {
 
     listDiv.innerHTML = html;
     document.querySelector('.submit-button').classList.add('show');
+
+    //削除ボタンのイベント設定
+    document.querySelector('.submit-button').addEventListener('click', deleteSelectedSubjects);
 }
