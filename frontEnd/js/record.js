@@ -17,6 +17,21 @@ async function loadSubjects() {
   }
 }
 
+//教科一覧をドロップダウンに表示する関数
+function displaySubjects(subjects) {
+  const subjectSelect = document.getElementById('subject');//ドロップダウンを取得
+
+  subjectSelect.innerHTML = '<option value="">教科を選択してください</option>';//デフォルトオプション
+
+  //教科をドロップダウンに追加
+  subjects.forEach(subject => {
+    const option = document.createElement('option');
+    option.value = subject.name;
+    option.textContent = subject.name;
+    subjectSelect.appendChild(option);
+  });
+}
+
 // フォーム送信時の処理
 document.getElementById('record-form').addEventListener('submit', async (e) => {
   e.preventDefault(); // ページのリロードを防ぐ
