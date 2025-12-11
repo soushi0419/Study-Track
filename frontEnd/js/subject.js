@@ -52,3 +52,30 @@ async function loadSubjects() {
         console.error('エラー:', error);
     }
 }
+
+//教科一覧を表示する関数
+function displaySubjects(subjects) {
+    const listDiv = document.querySelector('.list');
+
+    if(subjects.length === 0) {
+        listDiv.innerHTML = '<p class="message">まだ強化が登録されていません</p>';
+        document.querySelector('.submit-button').classList.remove('show');
+        return;
+    }
+
+    let html = '';
+    subjects.forEach(subject => {
+        html += `
+        <div class="subject-item">
+         <input type="checkbox" class="subject-checkbox" data-id="${subject.id}">
+         <div class="subject-item-content">
+          <div class="subject-item-name">${subject.name}</div>
+          ${subject.comment ? `<div class="subject-item-comment">${subject.comment}</div>`:''}
+         </div>
+        </div>
+        `;
+    });
+
+    listDiv.innerHTML = html;
+    document.querySelector('.submit-button').classList.add('show');
+}
