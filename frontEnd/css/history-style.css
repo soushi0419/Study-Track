@@ -303,9 +303,9 @@ h2 {
     cursor: pointer;
     transition: background-color 0.3s ease;
     display: grid;
-    grid-template-columns: auto 1fr;
+    grid-template-columns: 1fr auto auto;
     gap: 15px;
-
+    align-items: flex-start;
 }
 
 .record-item:hover {
@@ -314,6 +314,10 @@ h2 {
 
 .record-item:last-child {
     border-bottom: none;
+}
+
+.record-comment-cell {
+    min-width: 150px;
 }
 
 .record-header {
