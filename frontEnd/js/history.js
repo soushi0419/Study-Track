@@ -36,7 +36,7 @@ function displayRecords(records) {
         const displayDate = `${recordDate.getFullYear()}年${recordDate.getMonth() + 1}月${recordDate.getDate()}日`;
 
         html += `
-      <div class="record-item">
+      <div class="record-item" data-id="${record.id}">
         <div class="record-info">
           <div class="record-header">
             <span class="record-date">${displayDate}</span>
@@ -51,9 +51,35 @@ function displayRecords(records) {
           </div>
         </div>
         ${record.comment ? `<div class="record-comment">${record.comment}</div>` : ''}
+        <button class="delete-record-btn" data-id="${record.id}" onclick="deleteRecord(${record.id})">削除</button>
       </div>
     `;
     });
 
     recordList.innerHTML = html;
+}
+
+// 学習記録を削除する
+async function deleteRecord(id) {
+    if (!confirm('この記録を削除してもよろしいですか？')) {
+        return;
+    }
+
+    try {
+        const response = await fetch(`/api/records/${id}`, {
+            method: 'DELETE'
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            alert('記録を削除しました。');
+            loadRecords();
+        } else {
+            alert('削除に失敗しました')
+        }
+    } catch (error) {
+        console.error('エラー:', error);
+        alert('通信エラーが発生しました');
+    }
 }

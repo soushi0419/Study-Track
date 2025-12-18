@@ -337,6 +337,22 @@ h2 {
     line-height: 1.5;
 }
 
+.delete-record-btn {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    align-self: center;
+}
+
+.delete-record-btn:hover {
+    background-color: #c82333;
+}
+
 .record-date {
     font-weight: bold;
     color: #333;
