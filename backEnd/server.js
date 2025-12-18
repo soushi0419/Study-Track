@@ -110,11 +110,6 @@ app.get('/api/monthly-goals/:year/:month', async (req, res) => {
     }
 });
 
-// サーバーをポート3000で起動
-app.listen(3000, () => {
-    console.log('サーバーが http://localhost:3000 で起動しました');
-});
-
 //月別の学習記録一覧を取得するエンドポイント
 app.get('/api/records/:year/:month', async (req, res) => {
     try {
@@ -129,4 +124,25 @@ app.get('/api/records/:year/:month', async (req, res) => {
         console.error(error);
         res.status(500).json({ success: false, message: 'エラーが発生しました' });
     }
+});
+
+// 学習記録を削除するエンドポイント
+app.delete('/api/records/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const query = 'DELETE FROM records WHERE id = ?';
+
+        await pool.query(query, [id]);
+
+        res.json({ success: true, message: '記録を削除しました' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: 'エラーが発生しました' });
+    }
+});
+
+// サーバーをポート3000で起動
+app.listen(3000, () => {
+    console.log('サーバーが http://localhost:3000 で起動しました');
 });
