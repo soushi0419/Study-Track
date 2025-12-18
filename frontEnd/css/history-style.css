@@ -1,3 +1,4 @@
+/*========== 基本設定 ==========*/
 * {
     margin: 0;
     padding: 0;
@@ -11,6 +12,7 @@ body {
     margin: 0;
 }
 
+/*========== ヘッダー ==========*/
 .header {
     display: flex;
     align-items: center;
@@ -37,6 +39,7 @@ body {
     color: #333;
 }
 
+/*========== メインコンテナ ==========*/
 .container {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -49,6 +52,7 @@ body {
     min-height: 900px;
 }
 
+/* 共通のボックススタイル */
 .top-left,
 .bottom-left,
 .top-right,
@@ -60,6 +64,7 @@ body {
     overflow-y: auto;
 }
 
+/* グリッド配置 */
 .top-left {
     grid-column: 1;
     grid-row: 1;
@@ -156,6 +161,7 @@ h2 {
     text-align: center;
 }
 
+/* カレンダーの曜日行*/
 .calendar-weeks {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
@@ -171,6 +177,7 @@ h2 {
     font-size: 12px;
 }
 
+/* カレンダーの日付セル */
 .calendar-days {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
@@ -228,12 +235,14 @@ h2 {
     height: 100%;
 }
 
+/* 円グラフの背景 */
 .progress-bg {
     fill: none;
     stroke: #e0e0e0;
     stroke-width: 8;
 }
 
+/* 円グラフの進捗 */
 .progress-fill {
     fill: none;
     stroke: #4CAF50;
@@ -245,6 +254,7 @@ h2 {
     transition: stroke-dashoffset 0.5s ease;
 }
 
+/* 円グラフ内の達成率パーセンテージ */
 .progress-text {
     position: absolute;
     top: 50%;
@@ -259,6 +269,7 @@ h2 {
     color: #333;
 }
 
+/* 目標情報 */
 .goal-info {
     width: 100%;
 }
@@ -297,6 +308,7 @@ h2 {
     padding: 40px 20px;
 }
 
+/* 学習記録１件分の要素 */
 .record-item {
     padding: 15px;
     border-bottom: 1px solid #e0e0e0;
@@ -316,45 +328,23 @@ h2 {
     border-bottom: none;
 }
 
-.record-comment-cell {
-    min-width: 150px;
-}
-
-.record-header {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 8px;
-}
-
-
+/* 記録情報を縦にまとめたセクション */
 .record-info {
     display: flex;
     flex-direction: column;
     gap: 8px;
 }
 
-.record-comment {
-    color: #666;
-    font-size: 14px;
-    white-space: pre-wrap;
-    word-wrap: break-word;
-    line-height: 1.5;
+/* コメント用セル */
+.record-comment-cell {
+    min-width: 150px;
 }
 
-.delete-record-btn {
-    background-color: #dc3545;
-    color: white;
-    border: none;
-    padding: 6px 12px;
-    border-radius: 4px;
-    font-size: 12px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    align-self: center;
-}
-
-.delete-record-btn:hover {
-    background-color: #c82333;
+/* 記録の日付と時間を横に並べたヘッダー */
+.record-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
 }
 
 .record-date {
@@ -383,11 +373,40 @@ h2 {
     border-radius: 50%;
 }
 
+/* 学習タイプ */
 .record-type {
     font-size: 12px;
     color: #999;
     margin-top: 5px;
 }
+
+/* コメント表示 */
+.record-comment {
+    color: #666;
+    font-size: 14px;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    line-height: 1.5;
+}
+
+/* 削除ボタン */
+.delete-record-btn {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    align-self: center;
+}
+
+.delete-record-btn:hover {
+    background-color: #c82333;
+}
+
+
 
 /* モーダル */
 .modal {

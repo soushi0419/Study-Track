@@ -1,3 +1,4 @@
+/*========== 基本設定 ==========*/
 body {
     font-family: Arial, sans-serif;
     background: linear-gradient(to bottom, #e0f7fa, #ffffff);
@@ -6,7 +7,7 @@ body {
     text-align: center;
 }
 
-
+/*========== 見出し ==========*/
 h1 {
     font-size: 48px;
     color: #333;
@@ -20,6 +21,7 @@ h2 {
     margin-bottom: 20px;
 }
 
+/*========== テキスト ==========*/
 p {
     font-size: 18px;
     color: #666;
@@ -28,6 +30,7 @@ p {
     line-height: 1.6;
 }
 
+/*========== ボタンコンテナ ==========*/
 .button-container {
     display: flex;
     justify-content: center;
@@ -35,6 +38,7 @@ p {
     gap: 20px;
 }
 
+/* ホームボタン */
 .home-button {
     background-color: black;
     color: white;

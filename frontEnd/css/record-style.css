@@ -1,3 +1,4 @@
+/*========== 基本設定 ==========*/
 * {
     margin: 0;
     padding: 0;
@@ -11,6 +12,7 @@ body {
     padding: 0;
 }
 
+/*========== ヘッダー ==========*/
 .header {
     display: flex;
     align-items: center;
@@ -37,6 +39,7 @@ body {
     color: #333;
 }
 
+/*========== メインコンテナ ==========*/
 .container {
     display: flex;
     max-width: 1200px;
@@ -45,7 +48,7 @@ body {
     gap: 40px;
 }
 
-/* 左側：記録フォーム */
+/*==========左側：記録フォーム ==========*/
 .record {
     flex: 1;
     background-color: white;
@@ -198,7 +201,7 @@ body {
     border-color: #007BFF;
     box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
 }
-
+/* 送信ボタン */
 .submit-button {
     width: 100%;
     padding: 12px;
@@ -220,7 +223,7 @@ body {
     background-color: #003d82;
 }
 
-/* 右側：目標時間設定 */
+/*========== 右側：目標時間設定 ==========*/
 .target {
     flex: 1;
     background-color: white;
@@ -249,6 +252,7 @@ body {
     margin-bottom: 20px;
 }
 
+/* 目標進捗表示 */
 .target-progress {
     background-color: #f9f9f9;
     padding: 15px;

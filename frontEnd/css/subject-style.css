@@ -1,3 +1,4 @@
+/*========== 基本設定 ==========*/
 * {
     margin: 0;
     padding: 0;
@@ -11,6 +12,7 @@ body {
     padding: 0;
 }
 
+/*========== ヘッダー ==========*/
 .header {
     display: flex;
     align-items: center;
@@ -37,6 +39,7 @@ body {
     color: #333;
 }
 
+/*========== メインコンテナ ==========*/
 .container {
     display: flex;
     max-width: 1200px;
@@ -45,7 +48,7 @@ body {
     gap: 40px;
 }
 
-/* 左側：登録フォーム */
+/*========== 左側：登録フォーム ==========*/
 .subject-form {
     flex: 1;
     background-color: white;
@@ -70,6 +73,7 @@ body {
     font-weight: bold;
 }
 
+/* 教科名入力 */
 .subject {
     margin-bottom: 20px;
 }
@@ -90,6 +94,7 @@ body {
     box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
 }
 
+/* コメント入力 */
 .comment-input {
     margin-bottom: 20px;
 }
@@ -112,6 +117,7 @@ body {
     box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
 }
 
+/* 送信ボタン */
 .submit-button {
     width: 100%;
     padding: 12px;
@@ -133,7 +139,7 @@ body {
     background-color: #003d82;
 }
 
-/* 右側：登録済み教科一覧 */
+/*========== 右側：登録済み教科一覧 ==========*/
 .subject-list {
     flex: 1;
     background-color: white;
@@ -151,6 +157,7 @@ body {
     margin-bottom: 20px;
 }
 
+/* 教科リスト表示 */
 .list {
     flex: 1;
     min-height: 250px;
@@ -168,6 +175,7 @@ body {
     font-size: 16px;
 }
 
+/* 教科アイテム表示 */
 .subject-item {
     display: flex;
     align-items: flex-start;
@@ -214,6 +222,7 @@ body {
     word-wrap: break-word;
 }
 
+/* 削除ボタン */
 .subject-list .submit-button {
     background-color: #dc3545;
     align-self: flex-end;
