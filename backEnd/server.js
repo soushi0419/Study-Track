@@ -114,3 +114,19 @@ app.get('/api/monthly-goals/:year/:month', async (req, res) => {
 app.listen(3000, () => {
     console.log('サーバーが http://localhost:3000 で起動しました');
 });
+
+//月別の学習記録一覧を取得するエンドポイント
+app.get('/api/records/:year/:month', async (req, res) => {
+    try {
+        const { year, month } = req.params;
+
+        const query = 'SELECT * FROM records WHERE YEAR(date) = ? AND MONTH(date) = ? ORDER BY date DESC';
+
+        const [rows] = await pool.query(query, [year, month]);
+
+        res.json({ success: true, records: rows });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: 'エラーが発生しました' });
+    }
+});
