@@ -29,6 +29,7 @@ async function displayCalendar() {
 
         if (data.success) {
             renderCalendarDays(year, month, data.records);
+            displayRecords(data.records);
         }
     } catch (error) {
         console.error('エラー:', error);
