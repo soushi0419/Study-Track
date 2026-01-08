@@ -110,6 +110,26 @@ app.get('/api/monthly-goals/:year/:month', async (req, res) => {
     }
 });
 
+//月別の勉強時間を集計するエンドポイント
+app.get('/api/study-time/:year/:month', async (req, res) => {
+    try {
+        const { year, month } = req.params;
+
+        const query = 'SELECT SUM(hours * 60 + minutes) as total_minutes From records WHERE YEAR(date) = ? AND MONTH(date) = ?';
+
+        const [rows] = await pool.query(query, [year, month]);
+
+        const total_minutes = rows[0].total_minutes || 0;
+        const hours = Math.floor(total_minutes / 60);
+        const minutes = total_minutes % 60;
+
+        res.json({ success: true, hours: hours, minutes: minutes, total_minutes: total_minutes });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: 'エラーが発生しました' });
+    }
+});
+
 //月別の学習記録一覧を取得するエンドポイント
 app.get('/api/records/:year/:month', async (req, res) => {
     try {
