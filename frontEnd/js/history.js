@@ -121,7 +121,37 @@ async function displayGoalProgress() {
     }
 }
 
+// 達成率円グラフの更新
+function updateProgressCircle(percent) {
+    const progressFill = document.getElementById('progressFill');
+    const achievementPercent = document.getElementById('achievementPercent');
 
+    //パーセンテージの表示
+    achievementPercent.textContent = percent;
+
+    //円グラフのオフセット計算
+    const circumference = 339.39;
+    const offset = circumference - (circumference * percent) / 100;
+    progressFill.style.strokeDashoffset = offset;
+}
+
+function updateGoalInfo(year, month, goalHours, studyHours, achievementPercent) {
+    //残り日数の計算
+    const today = new Date();
+    const lastDay = new Date(year, month, 0);
+    const remainingDays = Math.max(0, lastDay.getDate() - today.getDate());
+
+    //１日当たりの目標時間の計算
+    const daysInMonth = lastDay.getDate();
+    const dailyGoal = goalHours > 0 ? Math.ceil((goalHours / daysInMonth) * 10) /10  : 0;
+
+    //画面に表示
+    document.getElementById('remainingDays').textContent = remainingDays;
+    document.getElementById('dailyGoal').textContent = dailyGoal;
+    document.getElementById('monthlyGoal').textContent = goalHours;
+    document.getElementById('currentStudyTime').textContent = studyHours;
+
+}
 // 学習記録を取得
 async function loadRecords() {
     const today = new Date();
