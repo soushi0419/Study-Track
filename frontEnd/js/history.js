@@ -2,14 +2,17 @@
 document.addEventListener('DOMContentLoaded', () => {
     loadRecords();// 学習記録の読み込み
     displayCalendar();// カレンダーの初期表示
-    // カレンダーの月移動ボタンのイベントリスナー
+    displayGoalProgress(); //円グラフの表示
+    // 月移動ボタンのイベントリスナー
     document.getElementById('prevMonth').addEventListener('click', () => {
         currentMonth.setMonth(currentMonth.getMonth() - 1);
         displayCalendar();
+        displayGoalProgress();
     });
     document.getElementById('nextMonth').addEventListener('click', () => {
         currentMonth.setMonth(currentMonth.getMonth() + 1);
         displayCalendar();
+        displayGoalProgress();
     });
 });
 
@@ -88,6 +91,37 @@ function renderCalendarDays(year, month, records) {
     }
 }
 
+// 目標達成率を計算して円グラフを表示
+async function displayGoalProgress() {
+    const year = currentMonth.getFullYear();
+    const month = currentMonth.getMonth() + 1;
+
+    try {
+        //目標時間の取得
+        const goalResponse = await fetch(`/api/monthly-goals/${year}/${month}`);
+        const goalData = await goalResponse.json();
+        const goalHours = goalData.target_hours || 0;
+
+        //学習時間の取得
+        const studyResponse = await fetch(`/api/study-time/${year}/${month}`);
+        const studyData = await studyResponse.json();
+        const studyHours = studyData.hours || 0;
+
+        //達成率の計算
+        let achievementPercent = 0;
+        if (goalHours > 0) {
+            achievementPercent = Math.min((studyHours / goalHours) * 100, 100);
+        }
+
+        updateProgressCircle(achievementPercent);
+
+        updateGoalInfo(year, month, goalHours, studyHours, achievementPercent);
+    } catch (error) {
+        console.error('エラー:', error);
+    }
+}
+
+
 // 学習記録を取得
 async function loadRecords() {
     const today = new Date();
@@ -121,24 +155,26 @@ function displayRecords(records) {
         const displayDate = `${recordDate.getFullYear()}年${recordDate.getMonth() + 1}月${recordDate.getDate()}日`;
 
         html += `
-      <div class="record-item" data-id="${record.id}">
-        <div class="record-info">
-          <div class="record-header">
-            <span class="record-date">${displayDate}</span>
-            <span class="record-time">${record.hours}時間${record.minutes}分</span>
-          </div>
-          <div class="record-subject">
-            <span class="subject-dot" style="background-color: #007BFF;"></span>
-            ${record.subject}
-          </div>
-          <div class="record-type">
-            ${record.study_type === 'school' ? '学校学習' : '自主学習'}
-          </div>
-        </div>
-        ${record.comment ? `<div class="record-comment">${record.comment}</div>` : ''}
-        <button class="delete-record-btn" data-id="${record.id}" onclick="deleteRecord(${record.id})">削除</button>
-      </div>
-    `;
+            <div class="record-item" data-id="${record.id}">
+                <div class="record-info">
+                    <div class="record-header">
+                        <span class="record-date">${displayDate}</span>
+                        <span class="record-time">${record.hours}時間${record.minutes}分</span>
+                    </div>
+                    <div class="record-subject">
+                        <span class="subject-dot" style="background-color: #007BFF;"></span>
+                        ${record.subject}
+                    </div>
+                    <div class="record-type">
+                        ${record.study_type === 'school' ? '学校学習' : '自主学習'}
+                    </div>
+                </div>
+                <div class="record-comment-cell">
+                    ${record.comment ? `<div class="record-comment">${record.comment}</div>` : ''}
+                </div>
+                <button class="delete-record-btn" data-id="${record.id}" onclick="deleteRecord(${record.id})">削除</button>
+            </div>
+        `;
     });
 
     recordList.innerHTML = html;
@@ -161,6 +197,7 @@ async function deleteRecord(id) {
             alert('記録を削除しました。');
             loadRecords();
             displayCalendar();
+            displayGoalProgress();
         } else {
             alert('削除に失敗しました')
         }
