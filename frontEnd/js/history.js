@@ -142,8 +142,8 @@ function updateGoalInfo(year, month, goalHours, studyHours, achievementPercent) 
     const remainingDays = Math.max(0, lastDay.getDate() - today.getDate());
 
     //１日当たりの目標時間の計算
-    const daysInMonth = lastDay.getDate();
-    const dailyGoal = goalHours > 0 ? Math.ceil((goalHours / daysInMonth) * 10) /10  : 0;
+    const remainingHours = Math.max(0, goalHours - studyHours);
+    const dailyGoal = remainingDays > 0 ? Math.ceil((remainingHours / remainingDays) * 10) /10  : 0;
 
     //画面に表示
     document.getElementById('remainingDays').textContent = remainingDays;
