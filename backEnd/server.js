@@ -11,7 +11,7 @@ app.use(express.json());
 
 //サーバーポートを3000で起動
 app.listen(3000, '0.0.0.0', () => {
-  console.log('サーバーが http://0.0.0.0:3000 で起動しました');
+    console.log('サーバーが http://0.0.0.0:3000 で起動しました');
 });
 
 // 学習記録を保存するエンドポイント
@@ -164,5 +164,38 @@ app.delete('/api/records/:id', async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).json({ success: false, message: 'エラーが発生しました' });
+    }
+});
+
+//週別の勉強時間を取得するエンドポイント
+app.get('/api/study-time/weekly/:year/:month', async (req, res) => {
+    try {
+        const { year, month } = req.params;
+
+        const firstDay = new Date(year, month - 1, 1);
+        const lastDay = new Date(year, month, 0);
+
+        const query = `SELECT WEEK(date, 1) - WEEK(DATE_SUB(date, INTERVAL DAYOFMONTH(date)-1 DAY), 1) + 1 as week_num, SUM(hours * 60 + minutes) as total_minutes FROM records WHERE YEAR(date) = ? AND MONTH(date) = ? GEOUP BY week_num ORDER BY week_num`;
+
+        const [rows] = await pool.query(query, [year, month]);
+
+        const weeklyData = [];
+        const maxWeeks = Math.ceil(lastDay.getDate() / 7);
+
+        for (let i = 1; i <= maxWeeks; i++) {
+            const weekData = rows.find(row => row.week_num === i);
+            const totalMinutes = weekData ? weekData.total_minutes : 0;
+            const hours = Math.round((totalMinutes / 60) * 10) / 10;
+
+            weeklyData.push({
+                week: i,
+                hours: hours
+            });
+        }
+
+        res.json({ success: true, data: weeklyData });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: 'エラーが発生しました。' });
     }
 });
