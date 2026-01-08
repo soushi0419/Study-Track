@@ -199,3 +199,38 @@ app.get('/api/study-time/weekly/:year/:month', async (req, res) => {
         res.status(500).json({ success: false, message: 'エラーが発生しました。' });
     }
 });
+
+//月別の勉強時間を取得するエンドポイント
+app.get('/api/study-time/monthly/:year/:month', async (req, res) => {
+    try {
+        const { year, month } = req.params;
+        const currentDate = new Date(year, month - 1, 1);
+
+        const monthlyData = [];
+
+        for (let i = 11; i >= 0; i--) {
+            const targetDate = new Date(currentDate);
+            targetDate.setMonth(currentDate.getMonth() - i);
+
+            const targetYear = targetDate.getFullYear();
+            const targetMonth = targetDate.getMonth() + 1;
+
+            const query = `SELECT SUM(hours * 60 + minutes) as total_minutes FROM records WHERE YEAR(date) = ? AND MONTH(date) = ?`;
+
+            const [rows] = await pool.query(query, [targetYear, targetMonth]);
+            const totalMinutes = rows[0].total_minutes || 0;
+            const hours = Math.round((totalMinutes / 60) * 10) / 10;
+
+            monthlyData.push({
+                year: targetYear,
+                month: targetMonth,
+                hours: hours
+            });
+        }
+        res.json({ success: true, data: monthlyData });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: 'エラーが発生しました' });
+    }
+});
+
