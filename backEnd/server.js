@@ -234,3 +234,31 @@ app.get('/api/study-time/monthly/:year/:month', async (req, res) => {
     }
 });
 
+//曜日別の勉強時間を取得するエンドポイント
+app.get('/api/study-time/daily/:year/:month', async (req, res) => {
+    try {
+        const { year, month } = req.params;
+
+        const query = `SELECT DAYOFWEEK(date) - 1 as day_of_week, SUM(hours * 60 + minutes) as total_minutes FROM records WHERE YEAE(date) = ? AND MONTH(date) = ? GROUP BY day_of_week ORDER BY day_of_week`;
+
+        const [rows] = await pool.query(query, [year, month]);
+
+        const dayNames = ['日', '月', '火', '水', '木', '金', '土',];
+
+        const dailyData = dayNames.map((dayNames, index) => {
+            const dayData = rows.find(row => row.day_of_week === index);
+            const totalMinutes = dayData ? dayData.total_minutes : 0;
+            const hours = Math.round((totalMinutes / 60) * 10) / 10;
+
+            return {
+                day: dayNames,
+                hours: hours
+            };
+        });
+
+        res.json({ success: true, data: dailyData });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: 'エラーが発生しました' });
+    }
+});
