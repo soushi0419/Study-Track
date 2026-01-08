@@ -9,6 +9,11 @@ app.use(express.static(path.join(__dirname, '../frontend')));
 // JSONデータを受け取れるようにする設定
 app.use(express.json());
 
+//サーバーポートを3000で起動
+app.listen(3000, '0.0.0.0', () => {
+  console.log('サーバーが http://0.0.0.0:3000 で起動しました');
+});
+
 // 学習記録を保存するエンドポイント
 app.post('/api/records', async (req, res) => {
     try {
@@ -160,9 +165,4 @@ app.delete('/api/records/:id', async (req, res) => {
         console.error(error);
         res.status(500).json({ success: false, message: 'エラーが発生しました' });
     }
-});
-
-// サーバーをポート3000で起動
-app.listen(3000, () => {
-    console.log('サーバーが http://localhost:3000 で起動しました');
 });
