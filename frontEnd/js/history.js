@@ -250,7 +250,7 @@ function updateProgressCircle(percent) {
     const achievementPercent = document.getElementById('achievementPercent');
 
     //パーセンテージの表示
-    achievementPercent.textContent = percent;
+    achievementPercent.textContent = Math.round(percent);
 
     //円グラフのオフセット計算
     const circumference = 339.39;
