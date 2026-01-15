@@ -17,8 +17,17 @@ document.addEventListener('DOMContentLoaded', () => {
         displayGoalProgress();
         displayStudyChart();
     });
+
+    //グラフ切り替えのイベントリスナー
+    document.querySelectorAll('input[name="graph-type"]').forEach(radio => {
+        radio.addEventListener('change', (e) => {
+            const graphType = e.target.value;
+            displayStudyChart(graphType);
+        });
+    });
 });
 
+//グラフインスタンスを保持する変数
 let studyChart = null;
 
 //グラフを表示する
@@ -33,7 +42,7 @@ async function displayStudyChart(type) {
 
     try {
         if (type === 'week') {
-            //週別グラフ
+            // 週別グラフ
             endpoint = `/api/study-time/weekly/${year}/${month}`;
             const response = await fetch(endpoint);
             const result = await response.json;
@@ -44,7 +53,7 @@ async function displayStudyChart(type) {
                 chartLabel = '週別勉強時間';
             }
         } else if (type === 'month') {
-            //月別グラフ
+            // 月別グラフ
             endpoint = `/api/study-time/monthly/${year}/${month}`;
             const response = await fetch(endpoint);
             const result = await response.json;
@@ -55,7 +64,7 @@ async function displayStudyChart(type) {
                 chartLabel = '月別勉強時間';
             }
         } else if (type === 'day') {
-            //曜日別グラフ
+            // 曜日別グラフ
             endpoint = `/api/study-time/daily/${year}/${month}`;
             const response = await fetch(endpoint);
             const result = await response.json;
