@@ -1,3 +1,9 @@
+// カレンダーの月を管理する変数
+let currentMonth = new Date();
+
+//グラフインスタンスを保持する変数
+let studyChart = null;
+
 // ページ読み込み時に学習記録を表示
 document.addEventListener('DOMContentLoaded', () => {
     loadRecords();// 学習記録の読み込み
@@ -27,9 +33,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-//グラフインスタンスを保持する変数
-let studyChart = null;
-
 //グラフを表示する
 async function displayStudyChart(type) {
     const year = currentMonth.getFullYear();
@@ -45,7 +48,7 @@ async function displayStudyChart(type) {
             // 週別グラフ
             endpoint = `/api/study-time/weekly/${year}/${month}`;
             const response = await fetch(endpoint);
-            const result = await response.json;
+            const result = await response.json();
 
             if (result.success) {
                 labels = result.data.map(item => `第${item.week}週`);
@@ -56,7 +59,7 @@ async function displayStudyChart(type) {
             // 月別グラフ
             endpoint = `/api/study-time/monthly/${year}/${month}`;
             const response = await fetch(endpoint);
-            const result = await response.json;
+            const result = await response.json();
 
             if (result.success) {
                 labels = result.data.map(item => `${item.year}年${item.month}月`);
@@ -67,7 +70,7 @@ async function displayStudyChart(type) {
             // 曜日別グラフ
             endpoint = `/api/study-time/daily/${year}/${month}`;
             const response = await fetch(endpoint);
-            const result = await response.json;
+            const result = await response.json();
 
             if (result.success) {
                 labels = result.data.map(item => `${item.day}曜日`);
@@ -76,7 +79,7 @@ async function displayStudyChart(type) {
             }
         }
 
-        renderCalendar(labels, data, chartLabel);
+        renderChart(labels, data, chartLabel);
     } catch (error) {
         console.error('グラフデータの取得エラー：', error);
     }
@@ -87,30 +90,30 @@ function renderChart(labels, data, chartLabel) {
     const ctx = document.getElementById('studyChart').getContext('2d');
 
     //既存のグラフがあれば破壊
-    if (studyChrt) {
-        studyChrt.destroy();
+    if (studyChart) {
+        studyChart.destroy();
     }
 
     //新しいグラフの生成
-    studyChrt = new chartLabel(ctx, {
+    studyChart = new chart(ctx, {
         type: 'bar',
         data: {
             labels: labels,
             datasets: [{
                 label: chartLabel,
                 data: data,
-                backgrondColor: 'rgda(54,162,235,0.6)',
+                backgroundColor: 'rgba(54,162,235,0.6)',
                 borderWidth: 1
             }]
         },
-        Options: {
+        options: {
             responsive: true,
-            maintainAspextRatio: false,
+            maintainAspectRatio: false,
             scales: {
                 y: {
                     beginAtZero: true,
                     ticks: {
-                        callback: function (value) {
+                        callbacks: function (value) {
                             return value + '時間';
                         }
                     }
@@ -132,9 +135,6 @@ function renderChart(labels, data, chartLabel) {
         }
     });
 }
-
-// カレンダーの月を管理する変数
-let currentMonth = new Date();
 
 // カレンダーを表示
 async function displayCalendar() {
