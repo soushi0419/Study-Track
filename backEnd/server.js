@@ -5,7 +5,7 @@ const { GoogleGenerativeAI } = require('@google/generative-ai');
 const app = express();
 
 // Gemini APIの初期化
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || AIzaSyAgBvbPA_1Mr - mnmj8he2ENWeeFAy6jzYQ);
+const genAI = new GoogleGenerativeAI('AIzaSyAgBvbPA_1Mr-mnmj8he2ENWeeFAy6jzYQ');
 
 // frontendのHTMLとCSSを配信する設定
 app.use(express.static(path.join(__dirname, '../frontend')));
