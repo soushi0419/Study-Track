@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <title>AIチャット</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="css/chat-style.css">
+</head>
+
+<body>
+    <div class="header">
+        <a href="index.html" class="back-button">←</a>
+        <h1>学習相談チャット</h1>
+    </div>
+
+    <div class="container">
+        <div class="chat-container">
+            <div class="chat-messages" id="chatMessages">
+                <div class="welcom-message">
+                    <p>こんにちは！学習支援AIアシスタントです。</p>
+                    <p>勉強に関する質問や相談があれば、何でも聞いてください。</p>
+                    <p>あなたの学習記録を基に、最適なアドバイスを提供します。</p>
+                </div>
+            </div>
+
+            <div class="chat-input-container">
+                <textarea id="messageInput" placeholder="メッセージを入力してください..." rows="3"></textarea>
+                <button id="sendButton" class="send-button">送信</button>
+            </div>
+        </div>
+
+        <div class="suggestion-container">
+            <h2>質問例</h2>
+            <div class="suggestion-buttons">
+                <button class="suggestion-btn" data-message="今月の勉強の進捗はどうですか？">
+                    今月の進捗確認
+                </button>
+                <button class="suggestion-btn" data-message="効率的な勉強法を教えてください">
+                    効率的な勉強法
+                </button>
+                <button class="suggestion-btn" data-message="モチベーションが下がっています。どうすればいいですか？">
+                    モチベーション向上
+                </button>
+                <button class="suggestion-btn" data-message="目標達成のために何をすればいいですか？">
+                    目標達成のコツ
+                </button>
+                <button class="suggestion-btn" data-message="バランスよく勉強するにはどうすればいいですか？">
+                    バランスの取り方
+                </button>
+                <button class="suggestion-btn" data-message="集中力を高める方法を教えてください">
+                    集中力アップ
+                </button>
+            </div>
+
+            <div class="chat-history-section">
+                <h2>最近の会話</h2>
+                <div id="chatHistory" class="chat-history-list">
+                    <p class="no-history">まだ会話履歴がありません</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/chat.js"></script>
+</body>
+
+</html>
