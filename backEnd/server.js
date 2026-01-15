@@ -1,7 +1,11 @@
 const express = require('express');
 const path = require('path');
 const pool = require('./db');
+const { GoogleGenerativeAI } = require('@google/generative-ai');
 const app = express();
+
+// Gemini APIの初期化
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || AIzaSyAgBvbPA_1Mr - mnmj8he2ENWeeFAy6jzYQ);
 
 // frontendのHTMLとCSSを配信する設定
 app.use(express.static(path.join(__dirname, '../frontend')));
@@ -46,6 +50,117 @@ app.post('/api/subjects', async (req, res) => {
         } else {
             res.status(500).json({ success: false, message: 'エラーが発生しました' });
         }
+    }
+});
+
+//チャット履歴を取得するエンドポイント
+app.get('/api/chat-history', async (req, res) => {
+    try {
+        const query = 'SELECT * FROM chat_history ORDER BY created_at DESC LIMIT 50';
+        const [rows] = await pool.query(query);
+
+        res.json({ success: true, history: rows });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: 'エラーが発生しました' });
+    }
+});
+
+//AIチャットメッセージを送信するエンドポイント
+app.post('/api/chat', async (req, res) => {
+    try {
+        const { message } = req.body;
+
+        if (!message) {
+            return res.status(400).json({ success: false, message: 'メッセージが必要です' });
+        }
+
+        // 現在の月の学習データを取得
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = today.getMonth() + 1;
+
+        // 月間目標を取得
+        const goalQuery = 'SELECT target_hours FROM monthly_goals WHERE year = ? AND month = ?';
+        const [goalRows] = await pool.query(goalQuery, [year, month]);
+        const goalHours = goalRows.length > 0 ? goalRows[0].target_hours : 0;
+
+        // 月間勉強時間を取得
+        const studyQuery = 'SELECT SUM(hours * 60 + minutes) as total_minutes FROM records WHERE YEAR(date) = ? AND MONTH(date) = ?';
+        const [studyRows] = await pool.query(studyQuery, [year, month]);
+        const totalMinutes = studyRows[0].total_minutes || 0;
+        const studyHours = Math.floor(totalMinutes / 60);
+
+        // 教科別の勉強時間を取得
+        const subjectQuery = `
+            SELECT subject, SUM(hours * 60 + minutes) as total_minutes 
+            FROM records 
+            WHERE YEAR(date) = ? AND MONTH(date) = ?
+            GROUP BY subject
+            ORDER BY total_minutes DESC
+        `;
+        const [subjectRows] = await pool.query(subjectQuery, [year, month]);
+        const subjectStats = subjectRows.map(row => ({
+            subject: row.subject,
+            hours: Math.round((row.total_minutes / 60) * 10) / 10
+        }));
+
+        // 最近7日間の勉強記録を取得
+        const recentQuery = `
+            SELECT date, hours, minutes, subject 
+            FROM records 
+            WHERE date >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)
+            ORDER BY date DESC
+        `;
+        const [recentRows] = await pool.query(recentQuery);
+
+        // Gemini APIに渡すコンテキストを構築
+        const context = `
+あなたは学習支援AIアシスタントです。ユーザーの学習記録を基に、適切なアドバイスや励ましを提供してください。
+
+【ユーザーの現在の状況】
+- 今月の目標勉強時間: ${goalHours}時間
+- 今月の実際の勉強時間: ${studyHours}時間
+- 達成率: ${goalHours > 0 ? Math.round((studyHours / goalHours) * 100) : 0}%
+
+【教科別の勉強時間（今月）】
+${subjectStats.length > 0 ? subjectStats.map(s => `- ${s.subject}: ${s.hours}時間`).join('\n') : '- まだ記録がありません'}
+
+【最近7日間の勉強記録】
+${recentRows.length > 0 ? recentRows.map(r => `- ${r.date}: ${r.subject} ${r.hours}時間${r.minutes}分`).join('\n') : '- まだ記録がありません'}
+
+ユーザーからの質問やメッセージに対して、以下を心がけて回答してください：
+1. 具体的で実践的なアドバイスを提供する
+2. データに基づいた客観的な分析を行う
+3. 前向きで励ましのある口調を使う
+4. 必要に応じて勉強法や時間管理のテクニックを提案する
+5. 日本語で簡潔に答える（200文字程度）
+
+ユーザーのメッセージ: ${message}
+`;
+
+        // Gemini APIを呼び出し
+        const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
+        const result = await model.generateContent(context);
+        const response = await result.response;
+        const aiResponse = response.text();
+
+        // チャット履歴をデータベースに保存
+        const saveQuery = 'INSERT INTO chat_history (user_message, ai_response) VALUES (?, ?)';
+        await pool.query(saveQuery, [message, aiResponse]);
+
+        res.json({
+            success: true,
+            response: aiResponse
+        });
+
+    } catch (error) {
+        console.error('Chat API Error:', error);
+        res.status(500).json({
+            success: false,
+            message: 'AIとの通信中にエラーが発生しました',
+            error: error.message
+        });
     }
 });
 
