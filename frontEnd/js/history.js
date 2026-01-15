@@ -82,7 +82,56 @@ async function displayStudyChart(type) {
     }
 }
 
+// Chart.jsでグラフを描画する
+function renderChart(labels, data, chartLabel) {
+    const ctx = document.getElementById('studyChart').getContext('2d');
 
+    //既存のグラフがあれば破壊
+    if (studyChrt) {
+        studyChrt.destroy();
+    }
+
+    //新しいグラフの生成
+    studyChrt = new chartLabel(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: chartLabel,
+                data: data,
+                backgrondColor: 'rgda(54,162,235,0.6)',
+                borderWidth: 1
+            }]
+        },
+        Options: {
+            responsive: true,
+            maintainAspextRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: function (value) {
+                            return value + '時間';
+                        }
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top'
+                },
+                tooltip: {
+                    callback: {
+                        label: function (context) {
+                            return context.parsed.y + '時間';
+                        }
+                    }
+                }
+            }
+        }
+    });
+}
 
 // カレンダーの月を管理する変数
 let currentMonth = new Date();
