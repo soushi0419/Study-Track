@@ -115,7 +115,7 @@ async function loadChatHistory() {
 
 //チャット履歴を表示
 function displayChatHistory(history) {
-    const historyDiv = document.getElementById('chathistory');
+    const historyDiv = document.getElementById('chatHistory');
 
     if (history.length === 0) {
         historyDiv.innerHTML = '<p class="no-history">まだ会話履歴がありません</p>';
