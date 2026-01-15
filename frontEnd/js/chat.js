@@ -1,3 +1,5 @@
+const { use } = require("react");
+
 //ページ読み込み時の処理
 document.addEventListener('DOMContentLoaded', () => {
     loadChatHistory();//チャット履歴読み込み
@@ -138,3 +140,19 @@ function displayChatHistory(history) {
 
     historyDiv.innerHTML = html;
 }
+
+//履歴からチャットに読み込む
+function loadHistoryToChat(userMessage, aiResponse) {
+    //既存のメッセージをクリア
+    const messageDiv = document.getElementById('chatMessages');
+    const welcomeMsg = messagesDiv.querySelector('.welcome-message');
+    messageDiv.innerHTML = '';
+    if(welcomeMsg){
+        messageDiv.appendChild(welcomeMsg);
+    }
+
+    //履歴のメッセージを表示
+    addMessageToChat(userMessage,'user');
+    addMessageToChat(aiResponse,'ai');
+}
+
