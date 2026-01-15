@@ -147,12 +147,18 @@ function loadHistoryToChat(userMessage, aiResponse) {
     const messageDiv = document.getElementById('chatMessages');
     const welcomeMsg = messagesDiv.querySelector('.welcome-message');
     messageDiv.innerHTML = '';
-    if(welcomeMsg){
+    if (welcomeMsg) {
         messageDiv.appendChild(welcomeMsg);
     }
 
     //履歴のメッセージを表示
-    addMessageToChat(userMessage,'user');
-    addMessageToChat(aiResponse,'ai');
+    addMessageToChat(userMessage, 'user');
+    addMessageToChat(aiResponse, 'ai');
 }
 
+//HTMLエスケープ関数
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
