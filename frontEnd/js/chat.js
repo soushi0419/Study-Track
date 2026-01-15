@@ -1,5 +1,3 @@
-const { use } = require("react");
-
 //ページ読み込み時の処理
 document.addEventListener('DOMContentLoaded', () => {
     loadChatHistory();//チャット履歴読み込み
@@ -27,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 //メッセージを送信
 async function sendMessage() {
-    const input = document.getElementById('message');
+    const input = document.getElementById('messageInput');
     const message = input.value.trim();
 
     if (!message) {
@@ -48,7 +46,7 @@ async function sendMessage() {
     loadingDiv.textContent = '考え中...';
     loadingDiv.id = 'loading';
     document.getElementById('chatMessages').appendChild(loadingDiv);
-    scrollTOBottom();
+    scrollToBottom();
 
     try {
         // サーバーにメッセージを送信
@@ -87,16 +85,16 @@ async function sendMessage() {
 
 //メッセージをチャットエリアに追加
 function addMessageToChat(text, type) {
-    const messagesDiv = document.getElementById('chatMessage');
+    const messagesDiv = document.getElementById('chatMessages');
     const messageDiv = document.createElement('div');
-    messageDiv.className = `,essage ${type}-message`;
+    messageDiv.className = `message ${type}-message`;
     messageDiv.textContent = text;
     messagesDiv.appendChild(messageDiv);
-    scrollTOBottom();
+    scrollToBottom();
 }
 
 //チャットエリアを最下部にスクロール
-function scrollTOBottom() {
+function scrollToBottom() {
     const messagesDiv = document.getElementById('chatMessages');
     messagesDiv.scrollTop = messagesDiv.scrollHeight;
 }
@@ -117,7 +115,7 @@ async function loadChatHistory() {
 
 //チャット履歴を表示
 function displayChatHistory(history) {
-    const historyDiv = document.getElementById('chathitory');
+    const historyDiv = document.getElementById('chathistory');
 
     if (history.length === 0) {
         historyDiv.innerHTML = '<p class="no-history">まだ会話履歴がありません</p>';
@@ -144,11 +142,11 @@ function displayChatHistory(history) {
 //履歴からチャットに読み込む
 function loadHistoryToChat(userMessage, aiResponse) {
     //既存のメッセージをクリア
-    const messageDiv = document.getElementById('chatMessages');
+    const messagesDiv = document.getElementById('chatMessages');
     const welcomeMsg = messagesDiv.querySelector('.welcome-message');
-    messageDiv.innerHTML = '';
+    messagesDiv.innerHTML = '';
     if (welcomeMsg) {
-        messageDiv.appendChild(welcomeMsg);
+        messagesDiv.appendChild(welcomeMsg);
     }
 
     //履歴のメッセージを表示
