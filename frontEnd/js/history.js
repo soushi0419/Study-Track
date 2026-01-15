@@ -95,7 +95,7 @@ function renderChart(labels, data, chartLabel) {
     }
 
     //新しいグラフの生成
-    studyChart = new chart(ctx, {
+    studyChart = new Chart(ctx, {
         type: 'bar',
         data: {
             labels: labels,
@@ -113,7 +113,7 @@ function renderChart(labels, data, chartLabel) {
                 y: {
                     beginAtZero: true,
                     ticks: {
-                        callbacks: function (value) {
+                        callback: function (value) {
                             return value + '時間';
                         }
                     }
@@ -125,7 +125,7 @@ function renderChart(labels, data, chartLabel) {
                     position: 'top'
                 },
                 tooltip: {
-                    callback: {
+                    callbacks: {
                         label: function (context) {
                             return context.parsed.y + '時間';
                         }
@@ -138,7 +138,7 @@ function renderChart(labels, data, chartLabel) {
 
 //現在選択中のグラフタイプで更新する
 function updateChart() {
-    const selectedType = document.querySelector('input[name="graph-type]:checked').value;
+    const selectedType = document.querySelector('input[name="graph-type"]:checked').value;
     displayStudyChart(selectedType);
 }
 
