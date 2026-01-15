@@ -3,18 +3,77 @@ document.addEventListener('DOMContentLoaded', () => {
     loadRecords();// 学習記録の読み込み
     displayCalendar();// カレンダーの初期表示
     displayGoalProgress(); //円グラフの表示
+    displayStudyChart('week');//グラフの初期表示
     // 月移動ボタンのイベントリスナー
     document.getElementById('prevMonth').addEventListener('click', () => {
         currentMonth.setMonth(currentMonth.getMonth() - 1);
         displayCalendar();
         displayGoalProgress();
+        displayStudyChart();
     });
     document.getElementById('nextMonth').addEventListener('click', () => {
         currentMonth.setMonth(currentMonth.getMonth() + 1);
         displayCalendar();
         displayGoalProgress();
+        displayStudyChart();
     });
 });
+
+let studyChart = null;
+
+//グラフを表示する
+async function displayStudyChart(type) {
+    const year = currentMonth.getFullYear();
+    const month = currentMonth.getMonth() + 1;
+
+    let endpoint = '';
+    let labels = [];
+    let data = [];
+    let chartLabel = '';
+
+    try {
+        if (type === 'week') {
+            //週別グラフ
+            endpoint = `/api/study-time/weekly/${year}/${month}`;
+            const response = await fetch(endpoint);
+            const result = await response.json;
+
+            if (result.success) {
+                labels = result.data.map(item => `第${item.week}週`);
+                data = result.data.map(item => item.hours);
+                chartLabel = '週別勉強時間';
+            }
+        } else if (type === 'month') {
+            //月別グラフ
+            endpoint = `/api/study-time/monthly/${year}/${month}`;
+            const response = await fetch(endpoint);
+            const result = await response.json;
+
+            if (result.success) {
+                labels = result.data.map(item => `${item.year}年${item.month}月`);
+                data = result.data.map(item => item.hours);
+                chartLabel = '月別勉強時間';
+            }
+        } else if (type === 'day') {
+            //曜日別グラフ
+            endpoint = `/api/study-time/daily/${year}/${month}`;
+            const response = await fetch(endpoint);
+            const result = await response.json;
+
+            if (result.success) {
+                labels = result.data.map(item => `${item.day}曜日`);
+                data = result.data.map(item => item.hours);
+                chartLabel = '曜日別勉強時間';
+            }
+        }
+
+        renderCalendar(labels, data, chartLabel);
+    } catch (error) {
+        console.error('グラフデータの取得エラー：', error);
+    }
+}
+
+
 
 // カレンダーの月を管理する変数
 let currentMonth = new Date();
@@ -143,7 +202,7 @@ function updateGoalInfo(year, month, goalHours, studyHours, achievementPercent) 
 
     //１日当たりの目標時間の計算
     const remainingHours = Math.max(0, goalHours - studyHours);
-    const dailyGoal = remainingDays > 0 ? Math.ceil((remainingHours / remainingDays) * 10) /10  : 0;
+    const dailyGoal = remainingDays > 0 ? Math.ceil((remainingHours / remainingDays) * 10) / 10 : 0;
 
     //画面に表示
     document.getElementById('remainingDays').textContent = remainingDays;
