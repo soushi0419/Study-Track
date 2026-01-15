@@ -5,7 +5,7 @@ const { GoogleGenerativeAI } = require('@google/generative-ai');
 const app = express();
 
 // Gemini APIの初期化
-const genAI = new GoogleGenerativeAI('AIzaSyAgBvbPA_1Mr-mnmj8he2ENWeeFAy6jzYQ');
+const genAI = new GoogleGenerativeAI('AIzaSyDwAJ4x3039Gy29N6pXQe98AV3m0fTcCUY');
 
 // frontendのHTMLとCSSを配信する設定
 app.use(express.static(path.join(__dirname, '../frontend')));
@@ -15,7 +15,7 @@ app.use(express.json());
 
 //サーバーポートを3000で起動
 app.listen(3000, '0.0.0.0', () => {
-    console.log('サーバーが http://0.0.0.0:3000 で起動しました');
+    console.log('サーバーが http://localhost:3000 で起動しました');
 });
 
 // 学習記録を保存するエンドポイント
@@ -140,7 +140,7 @@ ${recentRows.length > 0 ? recentRows.map(r => `- ${r.date}: ${r.subject} ${r.hou
 `;
 
         // Gemini APIを呼び出し
-        const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
+        const model = genAI.getGenerativeModel({ model: 'gemini-3-flash-preview' });
         const result = await model.generateContent(context);
         const response = await result.response;
         const aiResponse = response.text();
