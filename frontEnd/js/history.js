@@ -302,10 +302,13 @@ function displayRecords(records) {
         return;
     }
 
+    const dayNames = ['日', '月', '火', '水', '木', '金', '土'];
+
     let html = '';
     records.forEach(record => {
         const recordDate = new Date(record.date);
-        const displayDate = `${recordDate.getFullYear()}年${recordDate.getMonth() + 1}月${recordDate.getDate()}日`;
+        const dayOfWeek = dayNames[recordDate.getDay()];
+        const displayDate = `${recordDate.getFullYear()}年${recordDate.getMonth() + 1}月${recordDate.getDate()}日(${dayOfWeek})`;
 
         html += `
             <div class="record-item" data-id="${record.id}">
