@@ -98,3 +98,16 @@ function scrollTOBottom() {
     const messagesDiv = document.getElementById('chatMessages');
     messagesDiv.scrollTop = messagesDiv.scrollHeight;
 }
+
+async function loadChatHistory() {
+    try {
+        const response = await fetch('/api/chat-hitory');
+        const data = await response.json();
+
+        if (data.success && data.history.length > 0) {
+            displayChatHitory(data.history);
+        }
+    } catch (error) {
+        console.error('履歴読み込みエラー', error);
+    }
+}
