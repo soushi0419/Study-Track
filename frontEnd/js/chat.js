@@ -23,3 +23,62 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
+//メッセージを送信
+async function sendMessage() {
+    const input = document.getElementById('message');
+    const message = input.value.trim();
+
+    if (!message) {
+        return;
+    }
+
+    //入力欄をクリアして無効化
+    input.value = '';
+    input.disabled = true;
+    document.getElementById('sendButton').disabled = true;
+
+    //ユーザーメッセージを表示
+    addMessageToChat(message, 'user');
+
+    //ローディングメッセージを表示
+    const loadingDiv = document.createElement('div');
+    loadingDiv.className = 'loading-message';
+    loadingDiv.textContent = '考え中...';
+    loadingDiv.id = 'loading';
+    document.getElementById('chatMessages').appendChild(loadingDiv);
+    scrollTOBottom();
+
+    try {
+        // サーバーにメッセージを送信
+        const response = await fetch('/api/chat', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ message: message })
+        });
+
+        const data = await response.json();
+
+        // ローディングメッセージを削除
+        document.getElementById('loading').remove();
+
+        if (data.success) {
+            // AIの返答を表示
+            addMessageToChat(data.response, 'ai');
+            // チャット履歴を更新
+            loadChatHistory();
+        } else {
+            addMessageToChat('エラーが発生しました: ' + data.message, 'ai');
+        }
+    } catch (error) {
+        console.error('送信エラー:', error);
+        document.getElementById('loading').remove();
+        addMessageToChat('通信エラーが発生しました。', 'ai');
+    } finally {
+        // 入力欄を再度有効化
+        input.disabled = false;
+        document.getElementById('sendButton').disabled = false;
+        input.focus();
+    }
+}
