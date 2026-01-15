@@ -99,15 +99,42 @@ function scrollTOBottom() {
     messagesDiv.scrollTop = messagesDiv.scrollHeight;
 }
 
+//チャット履歴読み込み
 async function loadChatHistory() {
     try {
-        const response = await fetch('/api/chat-hitory');
+        const response = await fetch('/api/chat-history');
         const data = await response.json();
 
         if (data.success && data.history.length > 0) {
-            displayChatHitory(data.history);
+            displayChatHistory(data.history);
         }
     } catch (error) {
         console.error('履歴読み込みエラー', error);
     }
+}
+
+//チャット履歴を表示
+function displayChatHistory(history) {
+    const historyDiv = document.getElementById('chathitory');
+
+    if (history.length === 0) {
+        historyDiv.innerHTML = '<p class="no-history">まだ会話履歴がありません</p>';
+        return;
+    }
+
+    let html = '';
+    history.forEach(item => {
+        const date = new Date(item.created_at);
+        const timeStr = `${date.getMonth() + 1}月${date.getDate()}日 ${date.getHours()}:${String(date.getMinutes()).padStart(2, '0')}`;
+
+        html += `
+            <div class="history-item" onclick="loadHistoryToChat('${escapeHtml(item.user_message)}', '${escapeHtml(item.ai_response)}')">
+                <div class="history-user">質問: ${escapeHtml(item.user_message)}</div>
+                <div class="history-ai">${escapeHtml(item.ai_response)}</div>
+                <div class="history-time">${timeStr}</div>
+            </div>
+        `;
+    });
+
+    historyDiv.innerHTML = html;
 }
