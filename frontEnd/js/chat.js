@@ -82,3 +82,13 @@ async function sendMessage() {
         input.focus();
     }
 }
+
+//メッセージをチャットエリアに追加
+function addMessageToChat(text, type) {
+    const messagesDiv = document.getElementById('chatMessage');
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `,essage ${type}-message`;
+    messageDiv.textContent = text;
+    messagesDiv.appendChild(messageDiv);
+    scrollTOBottom();
+}
