@@ -92,3 +92,9 @@ function addMessageToChat(text, type) {
     messagesDiv.appendChild(messageDiv);
     scrollTOBottom();
 }
+
+//チャットエリアを最下部にスクロール
+function scrollTOBottom() {
+    const messagesDiv = document.getElementById('chatMessages');
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+}
