@@ -15,13 +15,13 @@ document.addEventListener('DOMContentLoaded', () => {
         currentMonth.setMonth(currentMonth.getMonth() - 1);
         displayCalendar();
         displayGoalProgress();
-        displayStudyChart();
+        updateChart();
     });
     document.getElementById('nextMonth').addEventListener('click', () => {
         currentMonth.setMonth(currentMonth.getMonth() + 1);
         displayCalendar();
         displayGoalProgress();
-        displayStudyChart();
+        updateChart();
     });
 
     //グラフ切り替えのイベントリスナー
@@ -134,6 +134,12 @@ function renderChart(labels, data, chartLabel) {
             }
         }
     });
+}
+
+//現在選択中のグラフタイプで更新する
+function updateChart() {
+    const selectedType = document.querySelector('input[name="graph-type]:checked').value;
+    displayStudyChart(selectedType);
 }
 
 // カレンダーを表示
@@ -345,6 +351,7 @@ async function deleteRecord(id) {
             loadRecords();
             displayCalendar();
             displayGoalProgress();
+            updateChart();
         } else {
             alert('削除に失敗しました')
         }
