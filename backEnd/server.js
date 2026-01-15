@@ -172,35 +172,60 @@ app.get('/api/study-time/weekly/:year/:month', async (req, res) => {
     try {
         const { year, month } = req.params;
 
-        const firstDay = new Date(year, month - 1, 1);
-        const lastDay = new Date(year, month, 0);
-
-        const query = `SELECT WEEK(date, 1) - WEEK(DATE_SUB(date, INTERVAL DAYOFMONTH(date)-1 DAY), 1) + 1 as week_num, SUM(hours * 60 + minutes) as total_minutes FROM records WHERE YEAR(date) = ? AND MONTH(date) = ? GEOUP BY week_num ORDER BY week_num`;
+        // その月の日付ごとの勉強時間を取得
+        const query = `
+            SELECT 
+                DAY(date) as day_num,
+                hours,
+                minutes
+            FROM records
+            WHERE YEAR(date) = ? AND MONTH(date) = ?
+            ORDER BY DAY(date)
+        `;
 
         const [rows] = await pool.query(query, [year, month]);
 
+        // 月の最終日を取得
+        const lastDay = new Date(year, month, 0).getDate();
+
+        // 日付ごとのデータをマップに変換（分単位で保存）
+        const dayMap = {};
+        rows.forEach(row => {
+            const totalMinutes = (row.hours * 60) + row.minutes;
+            if (!dayMap[row.day_num]) {
+                dayMap[row.day_num] = 0;
+            }
+            dayMap[row.day_num] += totalMinutes;
+        });
+
+        // 週ごとに集計（1日から7日ずつ区切る）
         const weeklyData = [];
-        const maxWeeks = Math.ceil(lastDay.getDate() / 7);
+        let weekNum = 1;
 
-        for (let i = 1; i <= maxWeeks; i++) {
-            const weekData = rows.find(row => row.week_num === i);
-            const totalMinutes = weekData ? weekData.total_minutes : 0;
-            const hours = Math.round((totalMinutes / 60) * 10) / 10;
+        for (let startDay = 1; startDay <= lastDay; startDay += 7) {
+            let weekMinutes = 0;
+            const endDay = Math.min(startDay + 6, lastDay);
 
+            for (let day = startDay; day <= endDay; day++) {
+                weekMinutes += dayMap[day] || 0;
+            }
+
+            const hours = Math.round((weekMinutes / 60) * 10) / 10;
             weeklyData.push({
-                week: i,
+                week: weekNum,
                 hours: hours
             });
+            weekNum++;
         }
 
         res.json({ success: true, data: weeklyData });
     } catch (error) {
         console.error(error);
-        res.status(500).json({ success: false, message: 'エラーが発生しました。' });
+        res.status(500).json({ success: false, message: 'エラーが発生しました' });
     }
 });
 
-//月別の勉強時間を取得するエンドポイント
+// 【新規】過去12ヶ月の勉強時間を取得するエンドポイント
 app.get('/api/study-time/monthly/:year/:month', async (req, res) => {
     try {
         const { year, month } = req.params;
@@ -208,6 +233,7 @@ app.get('/api/study-time/monthly/:year/:month', async (req, res) => {
 
         const monthlyData = [];
 
+        // 過去12ヶ月分のデータを取得
         for (let i = 11; i >= 0; i--) {
             const targetDate = new Date(currentDate);
             targetDate.setMonth(currentDate.getMonth() - i);
@@ -215,7 +241,11 @@ app.get('/api/study-time/monthly/:year/:month', async (req, res) => {
             const targetYear = targetDate.getFullYear();
             const targetMonth = targetDate.getMonth() + 1;
 
-            const query = `SELECT SUM(hours * 60 + minutes) as total_minutes FROM records WHERE YEAR(date) = ? AND MONTH(date) = ?`;
+            const query = `
+                SELECT SUM(hours * 60 + minutes) as total_minutes
+                FROM records
+                WHERE YEAR(date) = ? AND MONTH(date) = ?
+            `;
 
             const [rows] = await pool.query(query, [targetYear, targetMonth]);
             const totalMinutes = rows[0].total_minutes || 0;
@@ -227,6 +257,7 @@ app.get('/api/study-time/monthly/:year/:month', async (req, res) => {
                 hours: hours
             });
         }
+
         res.json({ success: true, data: monthlyData });
     } catch (error) {
         console.error(error);
@@ -234,24 +265,36 @@ app.get('/api/study-time/monthly/:year/:month', async (req, res) => {
     }
 });
 
-//曜日別の勉強時間を取得するエンドポイント
+// 【新規】曜日別の勉強時間を取得するエンドポイント
 app.get('/api/study-time/daily/:year/:month', async (req, res) => {
     try {
         const { year, month } = req.params;
 
-        const query = `SELECT DAYOFWEEK(date) - 1 as day_of_week, SUM(hours * 60 + minutes) as total_minutes FROM records WHERE YEAE(date) = ? AND MONTH(date) = ? GROUP BY day_of_week ORDER BY day_of_week`;
+        // 曜日別に集計（DAYOFWEEK: 1=日曜日, 2=月曜日, ..., 7=土曜日）
+        const query = `
+            SELECT 
+                DAYOFWEEK(date) as day_of_week,
+                SUM(hours * 60 + minutes) as total_minutes
+            FROM records
+            WHERE YEAR(date) = ? AND MONTH(date) = ?
+            GROUP BY DAYOFWEEK(date)
+            ORDER BY DAYOFWEEK(date)
+        `;
 
         const [rows] = await pool.query(query, [year, month]);
 
-        const dayNames = ['日', '月', '火', '水', '木', '金', '土',];
+        // 曜日名の配列（日曜日から）
+        const dayNames = ['日', '月', '火', '水', '木', '金', '土'];
 
-        const dailyData = dayNames.map((dayNames, index) => {
-            const dayData = rows.find(row => row.day_of_week === index);
+        // 全ての曜日のデータを用意
+        const dailyData = dayNames.map((dayName, index) => {
+            // DAYOFWEEKは1から始まるので、index + 1で対応
+            const dayData = rows.find(row => row.day_of_week === index + 1);
             const totalMinutes = dayData ? dayData.total_minutes : 0;
             const hours = Math.round((totalMinutes / 60) * 10) / 10;
 
             return {
-                day: dayNames,
+                day: dayName,
                 hours: hours
             };
         });
