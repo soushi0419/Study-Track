@@ -356,7 +356,7 @@ app.get('/api/study-time/weekly/:year/:month', async (req, res) => {
     }
 });
 
-// 【新規】過去12ヶ月の勉強時間を取得するエンドポイント
+// 過去12ヶ月の勉強時間を取得するエンドポイント
 app.get('/api/study-time/monthly/:year/:month', async (req, res) => {
     try {
         const { year, month } = req.params;
@@ -396,7 +396,7 @@ app.get('/api/study-time/monthly/:year/:month', async (req, res) => {
     }
 });
 
-// 【新規】曜日別の勉強時間を取得するエンドポイント
+// 曜日別の勉強時間を取得するエンドポイント
 app.get('/api/study-time/daily/:year/:month', async (req, res) => {
     try {
         const { year, month } = req.params;
