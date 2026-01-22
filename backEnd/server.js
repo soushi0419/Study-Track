@@ -317,24 +317,36 @@ app.get('/api/study-time/weekly/:year/:month', async (req, res) => {
             dayMap[row.day_num] += totalMinutes;
         });
 
-        // 週ごとに集計（1日から7日ずつ区切る）
+        // 週ごとに集計（日曜日から土曜日で区切る）
         const weeklyData = [];
+        const firstDay = new Date(year, month - 1, 1);
+        const firstDayOfWeek = firstDay.getDay(); // 0=日曜, 1=月曜, ..., 6=土曜
+
         let weekNum = 1;
+        let currentDay = 1 - firstDayOfWeek; // 前月の日付も含めた開始日
 
-        for (let startDay = 1; startDay <= lastDay; startDay += 7) {
+        while (currentDay <= lastDay) {
             let weekMinutes = 0;
-            const endDay = Math.min(startDay + 6, lastDay);
-
-            for (let day = startDay; day <= endDay; day++) {
-                weekMinutes += dayMap[day] || 0;
+            
+            // 7日間分の勉強時間を集計（前月や翌月のデータは無視）
+            for (let i = 0; i < 7; i++) {
+                const day = currentDay + i;
+                if (day >= 1 && day <= lastDay) {
+                    weekMinutes += dayMap[day] || 0;
+                }
             }
 
-            const hours = Math.round((weekMinutes / 60) * 10) / 10;
-            weeklyData.push({
-                week: weekNum,
-                hours: hours
-            });
-            weekNum++;
+            // データのある週のみカウント
+            if (currentDay + 6 <= lastDay || currentDay <= lastDay) {
+                const hours = Math.round((weekMinutes / 60) * 10) / 10;
+                weeklyData.push({
+                    week: weekNum,
+                    hours: hours
+                });
+                weekNum++;
+            }
+
+            currentDay += 7;
         }
 
         res.json({ success: true, data: weeklyData });
