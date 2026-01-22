@@ -1,3 +1,7 @@
+const dotenv = require("dotenv");
+dotenv.config();
+
+
 const express = require('express');
 const path = require('path');
 const pool = require('./db');
@@ -5,7 +9,7 @@ const { GoogleGenerativeAI } = require('@google/generative-ai');
 const app = express();
 
 // Gemini APIの初期化
-const genAI = new GoogleGenerativeAI('AIzaSyDwAJ4x3039Gy29N6pXQe98AV3m0fTcCUY');
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 // frontendのHTMLとCSSを配信する設定
 app.use(express.static(path.join(__dirname, '../frontend')));
